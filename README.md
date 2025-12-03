@@ -15,4 +15,4 @@ simple program, made to be a copy of Dirb program, written in native python.
 
 USAGE: 
 
-    python dirb-like.py -w [/wordlist.txt] --args 
+    python dirbpy.py -w [/wordlist.txt] --args 
