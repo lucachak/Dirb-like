@@ -13,6 +13,12 @@ simple program, made to be a copy of Dirb program, written in native python.
    [ ] - Output in JSON
    [ ] - Possibility of exploring in depth of a 200 url 
 
-USAGE: 
+ STEPS:
+   [ ] - Create a simple Connection
+   [ ] - Loop Connection
+
+
+
+ USAGE: 
 
     python dirbpy.py -w [/wordlist.txt] --args 
