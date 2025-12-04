@@ -84,7 +84,10 @@ class ConnectionHandler(metaclass=MetaConnectionHandler):
                 conn = hc.HTTPConnection(
                         self.__url[1], int(self.__url[2]))
                 conn.request("GET", self.__url[3])
-                time.sleep(self.__wait)
+                if self.__wait > 0:
+                    time.sleep(self.__wait)
+                else:
+                    pass
                 response = conn.getresponse()
                 if response.status == 200:
                     self.__positive_urls.append(f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")

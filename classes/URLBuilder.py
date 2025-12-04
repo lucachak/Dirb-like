@@ -24,7 +24,7 @@ class MetaURLBuilder(type):
 
 class URLBuilder(metaclass=MetaURLBuilder):
 
-    def __init__(self, base, endpoint_list:list[str]) -> None:
+    def __init__(self, base=None, endpoint_list:list[str]=[]) -> None:
         self.built_url = []
         self.__base = base 
         self.__endpoint_list = endpoint_list
@@ -36,7 +36,7 @@ class URLBuilder(metaclass=MetaURLBuilder):
 
     def get_built_urls(self)->list:
         return self.built_url
-    def get_base(self)->str:
+    def get_base(self)->str|None:
         return self.__base
     def get_endpoints(self)->list:
         return self.__endpoint_list

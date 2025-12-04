@@ -14,9 +14,10 @@ simple program, made to be a copy of Dirb program, written in native python.
    [ ] - Possibility of exploring in depth of a 200 url 
 
  STEPS:
-   [ ] - Create a simple Connection
-   [ ] - Loop Connection
-
+   [X] - Create a simple Connection
+   [X] - Loop Connection
+   [ ] - Fix the Values Errors
+   [ ] - Implement Multi threading
 
 
  USAGE: 

@@ -1,11 +1,4 @@
-class Helper:
-    def __init__(self) -> None:
-        pass
-
-
-    @staticmethod
-    def print_help():
-        """Print help message when no arguments are provided."""
+def print_help():
     print("""
 ╔══════════════════════════════════════════════════════╗
 ║                 DIRBPY - Directory Brute Forcer      ║
@@ -41,5 +34,5 @@ Exit Codes:
   2 - File not found
   3 - Invalid URL
 
-For more information: https://github.com/yourusername/dirbpy
+For more information: https://github.com/lucachak/dirbpy
 """)
