@@ -28,6 +28,7 @@ def get_wordlist(file:str="default.txt") -> list[str]:
 
 def main() -> None:
     url_builder = URLBuilder(
+            base = 'http://127.0.0.1:8000/',
             endpoint_list= get_wordlist()
             )
 
