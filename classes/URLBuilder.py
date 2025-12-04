@@ -1,4 +1,3 @@
-from typing import List
 class MetaURLBuilder(type):
     def __new__(cls, name, bases, attrs):
 
@@ -34,11 +33,6 @@ class URLBuilder(metaclass=MetaURLBuilder):
     def build(self):
         for path in self.__endpoint_list:
             self.built_url.append(f"{self.__base}{path}")
-
-
-        for url in self.built_url:
-            print(f"{url}")
-
 
     def get_built_urls(self)->list:
         return self.built_url
