@@ -4,6 +4,7 @@ class meant to handle the request and retrieve the info
 
 import time
 import http.client as hc
+import random
 
 class MetaConnectionHandler(type):
 
@@ -45,8 +46,9 @@ class MetaConnectionHandler(type):
 
 class ConnectionHandler(metaclass=MetaConnectionHandler):
 
-    def __init__(self, url:str, wait:float=0) -> None:
-        self.__url = self.url_parser(url.lower())
+    def __init__(self, url:str="", wait:float=0) -> None:
+        print(url)
+        self.__url = self.url_parser(url)
         self.__wait = wait 
         self.__positive_urls = []
 
@@ -77,23 +79,25 @@ class ConnectionHandler(metaclass=MetaConnectionHandler):
 
         return [conn_type, base_uri, port, path_args]
 
-    def connect(self):
 
+
+    def connect(self):
         try:
             if self.__url[0] == "http":
                 conn = hc.HTTPConnection(
                         self.__url[1], int(self.__url[2]))
                 conn.request("GET", self.__url[3])
+                
                 if self.__wait > 0:
                     time.sleep(self.__wait)
                 else:
-                    pass
-                response = conn.getresponse()
-                if response.status == 200:
-                    self.__positive_urls.append(f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
+                    time.sleep(random.uniform(0.1,1))
+                if conn.getresponse().status == 200:
+                    self.__positive_urls.append(
+                            f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
+                    return conn.getresponse()
                 else:
-                    print(f"STATUS {response.status}. Connection Failed. URL -> {self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
-                conn.close()
+                    conn.close()
 
             elif self.__url[0] == "https":
                 conn = hc.HTTPSConnection(
@@ -103,10 +107,14 @@ class ConnectionHandler(metaclass=MetaConnectionHandler):
                 conn.request("GET", self.__url[3])
                 time.sleep(self.__wait)
                 if conn.getresponse().status == 200:
-                    self.__positive_urls.append(f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
+                    self.__positive_urls.append(
+                            f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
+                    return conn.getresponse()
 
                 conn.close()
-        
+         
 
         except ValueError as e:
-            print("not connected")
+
+            print(f"not connected {e}")
+            return ("error", 404)

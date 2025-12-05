@@ -36,7 +36,7 @@ class URLBuilder(metaclass=MetaURLBuilder):
 
     def get_built_urls(self)->list:
         return self.built_url
-    def get_base(self)->str|None:
+    def get_base(self)->str:
         return self.__base
     def get_endpoints(self)->list:
         return self.__endpoint_list

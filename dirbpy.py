@@ -1,10 +1,30 @@
 """
 main entry point/ execution of code, as it seems to not be that big, i dont think i'll need much more
+
+... i was wrong >:(
+
+
+main()                                  # entry point, validate/count sys args
+    |-> start_program()                 # check if paramn are correct, wordlist path, URLBuilder
+            |
+            |-> get_wordlist()          # get_defaul_one /wordlist/default.txt
+            |
+            V
+       single_or_multi()                # where the magic will happen
+            \                           # smashing URLBuilder, args, ThreadPoolExecutor to exec 
+             |                           # everything. so, for each worker, one ConnectionHandler
+             |
+|=============================|
+|                             |
+|           SCAN              |
+|                             |
+|=============================|
+
 """
-from ast import match_case
 import os
 import sys
-from multiprocessing import Pool, Value
+from concurrent.futures import ThreadPoolExecutor,as_completed 
+
 from classes.ConnectionHandler import ConnectionHandler
 from classes.URLBuilder import URLBuilder
 from classes import Helper
@@ -23,7 +43,7 @@ def get_wordlist(file:str="default.txt") -> list[str]:
 
 
 def start_program(args:list):
-    url_builder = URLBuilder()
+
     for i in range(1,len(args)):
         match args[i]:
             case "-r":
@@ -54,22 +74,43 @@ def start_program(args:list):
                         base = args[i],
                         endpoint_list=get_wordlist()
                         )
-
-    url_builder.build()
-
+                url_builder.build()
     
-    def single_core()
-        for url in url_builder.get_built_urls():
-            conn = ConnectionHandler(url=url)
-            conn.connect()
+        
+
+
+def scan_url(url:str):
+    conn = ConnectionHandler(url=url)
+    path,status = conn.connect()
+    return (path, status) 
     
-    def multi_core(cores:int):
-        pass
+
+def single_or_multi(cores:int=1):
+    """
+        ill create a function to handle either a single core single 
+        multiple cores. 
+    """
+        
+    with ThreadPoolExecutor(max_workers=cores) as executor:
+        futures = [executor.submit(scan_url, url) 
+                       for url in url_builder.get_built_urls()]
+
+        for future in as_completed(futures):
+            path, status = future.result()
+            if status in {200, 301, 302, 403}:
+                print(f"[{status}] {path}")
+
+
+    single_or_multi()
+
+
+
 
 
 
 def main() -> None:
     valid_method = sys.argv[-1]
+    
     try: 
         if len(sys.argv) <= 2:
             raise ValueError
@@ -85,6 +126,9 @@ def main() -> None:
         Helper.print_help()
 
     
+
+
+
 
 if __name__ == "__main__":
     main()  
