@@ -5,21 +5,14 @@ It discovers hidden files and directories on web servers by trying common paths 
 
 
 ## ✨ Features
-    ⚡ Multi-threaded scanning using ThreadPoolExecutor
-
-    🎯 Status-code filtering (--filter 200,302,403)
-
-    🌌 One-level recursion (re-scan discovered paths)
-
-    🌈 ANSI-colored output (no libraries required)
-
-    📡 HTTP & HTTPS support
-
-    🧩 Simple URL builder
-
-    🧵 Randomized or fixed wait times
-
-    📁 Pluggable wordlists
+### ⚡ Multi-threaded scanning using ThreadPoolExecutor
+### 🎯 Status-code filtering (--filter 200,302,403)
+### 🌌 One-level recursion (re-scan discovered paths)
+### 🌈 ANSI-colored output (no libraries required)
+### 📡 HTTP & HTTPS support
+### 🧩 Simple URL builder
+### 🧵 Randomized or fixed wait times
+### 📁 Pluggable wordlists
 
 ## 📸 Terminal Preview
 ```bash
