@@ -1,7 +1,8 @@
-# Dirb-like
+# Dirpy
 
-Dirpy is a program inspired by Dirb, a lightweight Python implementation of a directory brute-forcing tool
+Dirpy is a program inspired by Dirb, a lightweight Python implementation of a directory brute-forcing tool.
 It discovers hidden files and directories on web servers by trying common paths from wordlists.
+the lists can be customized, but it also has a default, same as dirb
 
 
 ## ✨ Features
@@ -32,11 +33,10 @@ It discovers hidden files and directories on web servers by trying common paths 
 Requires Python 3.9+
 
 ```bash
-git clone https://github.com/<yourname>/CourierIQ.git
-cd CourierIQ
+git clone https://github.com/lucachak/Dirb-like.git
+cd Dirb-like
 python3 main.py -h
 ```
-
 No dependencies. No pip. Pure Python.
 
 
@@ -46,27 +46,27 @@ No dependencies. No pip. Pure Python.
 
 ### Run a simple scan:
 ```bash
-python3 main.py https://example.com
+python3 dirpy.py https://example.com
 ```
 ### Use custom wordlist
 ```bash
-python3 main.py https://example.com -w wordlist/custom.txt
+python3 dirpy.py https://example.com -w wordlist/custom.txt
 ```
 ### Multi-threading
 ```bash
-python3 main.py https://example.com -t 20
+python3 dirpy.py https://example.com -t 20
 ```
 ### Filter by status code
 ```bash
-python3 main.py https://example.com --filter 200,403
+python3 dirpy.py https://example.com --filter 200,403
 ```
 ### Recursive scan (1 level deep)
 ```bash
-python3 main.py https://example.com -r
+python3 dirpy.py https://example.com -r
 ```
 ### Full example
 ```bash
-python3 main.py https://example.com \
+python3 dirpy.py https://example.com \
     -w wordlist/default.txt \
     -t 25 \
     -r \
