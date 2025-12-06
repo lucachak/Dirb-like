@@ -1,120 +1,43 @@
-'''
-class meant to handle the request and retrieve the info
-'''
-
-import time
+# classes/ConnectionHandler.py
 import http.client as hc
 import random
-
-class MetaConnectionHandler(type):
-
-    def __new__(cls, name, bases, attrs):
-
-        attrs["__slots__"] = (
-                "__url",
-                "__wait",
-                "__positive_urls"
-                )
-        
-        required_attrs = [
-                "get_client", 
-                "set_client", 
-                "get_url", 
-                "set_url"
-                ]
-
-        try:
-            for attr in required_attrs:
-                if attr not in attrs:
-                    raise NotImplementedError(f"""
-                                    this attribute {attr} was not implemented
-                                    """)
-        except NotImplementedError as e:
-            print(e)            
-        return super().__new__(cls, name, bases, attrs)
+import time
+from urllib.parse import urlparse
 
 
+class ConnectionHandler:
+    def __init__(self, url: str, wait: float = 0):
+        self.scheme, self.host, self.port, self.path = self.url_parser(url)
+        self.wait = wait
 
+    def url_parser(self, url: str):
+        p = urlparse(url)
 
+        scheme = p.scheme
+        host = p.hostname
+        port = p.port or (80 if scheme == "http" else 443)
+        path = p.path if p.path else "/"
 
-
-
-
-
-
-
-
-class ConnectionHandler(metaclass=MetaConnectionHandler):
-
-    def __init__(self, url:str="", wait:float=0) -> None:
-        print(url)
-        self.__url = self.url_parser(url)
-        self.__wait = wait 
-        self.__positive_urls = []
-
-
-    #getters
-    def get_url(self):
-        return self.__url
-
-    def get_client(self)->hc.HTTPConnection|None:
-        return self.__client if not None else "no client yet..."
-
-    #setters
-    def set_client(self, client:hc.HTTPConnection) -> None:
-        self.__client = client
-
-    def set_url(self, url:str) -> None:
-        self.__url = url
-
-    
-    def url_parser(self, url:str)->list[str]:
-       
-        url_break =url.split(":")
-
-        conn_type = url_break[0]
-        base_uri = (url_break[1])[2:]
-        port = (url_break[2][0:4]).strip("/")
-        path_args = url_break[2][4:].replace(" ", "%20")
-
-        return [conn_type, base_uri, port, path_args]
-
-
+        return scheme, host, port, path
 
     def connect(self):
+        conn_cls = hc.HTTPConnection if self.scheme == "http" else hc.HTTPSConnection
+        conn = conn_cls(self.host, self.port, timeout=4)
+
         try:
-            if self.__url[0] == "http":
-                conn = hc.HTTPConnection(
-                        self.__url[1], int(self.__url[2]))
-                conn.request("GET", self.__url[3])
-                
-                if self.__wait > 0:
-                    time.sleep(self.__wait)
-                else:
-                    time.sleep(random.uniform(0.1,1))
-                if conn.getresponse().status == 200:
-                    self.__positive_urls.append(
-                            f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
-                    return conn.getresponse()
-                else:
-                    conn.close()
+            conn.request("GET", self.path.replace(" ", "%20"))
+            time.sleep(self.wait if self.wait > 0 else random.uniform(0.1, 0.5))
 
-            elif self.__url[0] == "https":
-                conn = hc.HTTPSConnection(
-                        self.__url[1],
-                        int(self.__url[2])
-                        )
-                conn.request("GET", self.__url[3])
-                time.sleep(self.__wait)
-                if conn.getresponse().status == 200:
-                    self.__positive_urls.append(
-                            f"{self.__url[0]}://{self.__url[1]}:{self.__url[2]}{self.__url[3]}")
-                    return conn.getresponse()
+            resp = conn.getresponse()
+            status = resp.status
 
-                conn.close()
-         
+            url = f"{self.scheme}://{self.host}:{self.port}{self.path}"
 
-        except ValueError as e:
+            return status, url
 
-            print(f"not connected {e}")
-            return ("error", 404)
+        finally:
+            conn.close()
+
+    @staticmethod
+    def fetch(url: str):
+        return ConnectionHandler(url).connect()
