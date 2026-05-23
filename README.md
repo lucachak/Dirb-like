@@ -43,16 +43,16 @@ By implementing the HTTP client manually — parsing status lines, handling redi
 
 ```bash
 # Basic scan
-python dirb-like.py -u http://target.com -w wordlist.txt
+python dirpy.py -u http://target.com -w wordlist.txt
 
 # HTTPS target
-python dirb-like.py -u https://target.com -w wordlist.txt
+python dirpy.py -u https://target.com -w wordlist.txt
 
 # Filter specific status codes
-python dirb-like.py -u http://target.com -w wordlist.txt -s 200,301,403
+python dirpy.py -u http://target.com -w wordlist.txt -s 200,301,403
 
 # Set thread count
-python dirb-like.py -u http://target.com -w wordlist.txt -t 20
+python dirpy.py -u http://target.com -w wordlist.txt -t 20
 ```
 
 ### Arguments
